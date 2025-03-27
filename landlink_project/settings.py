@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'inventory',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -140,7 +141,10 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend','rest_framework.filters.SearchFilter'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',  # LimitOffsetPagination allows clients to specify a limit (number of items) and an offset (starting point).
+    'PAGE_SIZE': 2
 }
 
 AUTH_USER_MODEL = 'accounts.User'
