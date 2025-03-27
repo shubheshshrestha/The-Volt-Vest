@@ -22,14 +22,14 @@ class UserSerializer(serializers.ModelSerializer):
         # Validate password complexity requirements
         # Validate password complexity requirements
         # password_validation.validate_password(value)  # Use Django's built-in validators
-        if len(value) < 8:
+        if len(value) < 8:  # Check if the password length is less than 8
             raise serializers.ValidationError('Password must be at least 8 characters.')
         return value
     
     def create(self, validated_data):
         # Hash password and allow 'is_staff' to be  set via API
-        validated_data['password'] = make_password(validated_data['password'])
-        return super().create(validated_data)
+        validated_data['password'] = make_password(validated_data['password'])  # Hash the password before saving
+        return super().create(validated_data)   # Call the parent class's create method to save the user
     
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,4 +44,4 @@ class LoginSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['id', 'user', 'message', 'is_read', 'created_at']
+        fields = ['id', 'user', 'message', 'is_read', 'created_at']     # Specify the fields to include in the serialization

@@ -1,9 +1,9 @@
-from django.db import models
-from django.contrib.auth import get_user_model
-from products.models import Product
-from customers.models import CustomerProfile
+# from django.db import models
+# from django.contrib.auth import get_user_model
+# from products.models import Product
+# from customers.models import CustomerProfile
 
-User = get_user_model()
+# User = get_user_model()
 
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -29,10 +29,10 @@ class Order(models.Model):
     updated_at = models.DateField(auto_now=True)
 
     def calculate_total_price(self):
-        return sum(op.product.price * op.quantity for op in self.orderproduct_set.all())
+        return sum(op.product.price * op.quantity for op in self.orderproduct_set.all())    # Calculate the sum of subtotal prices for each related OrderProduct
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+        super().save(*args, **kwargs)   # Call the parent class's save method
 
     def __str__(self):
         return f"Order #{self.id} by {self.customer}"
@@ -44,7 +44,7 @@ class OrderProduct(models.Model):
 
     @property
     def subtotal(self):
-        return self.product.price * self.quantity
+        return self.product.price * self.quantity   # Calculate the subtotal (price * quantity)
 
     class Meta:
         unique_together = ('order', 'product')  # Prevent duplicate product entries per order

@@ -32,7 +32,7 @@ class ProductView(viewsets.ModelViewSet):
             )  #  Only show products with stock greater than 0
     
     def perform_create(self, serializer):
-        serializer.save(supplier=self.request.user.supplier) # Set the supplier
+        serializer.save(supplier=self.request.user.supplier) # Set the supplier of the product to the current user's supplier
 
 
 

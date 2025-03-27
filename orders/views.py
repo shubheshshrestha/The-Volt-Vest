@@ -19,9 +19,9 @@ class SupplierOrderView(viewsets.ReadOnlyModelViewSet):
     #     return Order.objects.none()
     
     def get_queryset(self):
-        if self.request.user.role == 'Supplier':
-            return Order.objects.filter(products__supplier__user=self.request.user).distinct()
-        return Order.objects.none()
+        if self.request.user.role == 'Supplier':    
+            return Order.objects.filter(products__supplier__user=self.request.user).distinct()  # Return distinct orders related to the supplier's products
+        return Order.objects.none()     # Otherwise, return an empty queryset
 
 class CustomerOrderView(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
@@ -29,13 +29,13 @@ class CustomerOrderView(viewsets.ModelViewSet):
     permission_classes = [IsCustomer]
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Order.objects.none()
-        return Order.objects.filter(customer=self.request.user.customerprofile)
+        if not self.request.user.is_authenticated:  # If the user is not authenticated
+            return Order.objects.none()      # Return an empty queryset
+        return Order.objects.filter(customer=self.request.user.customerprofile) # Otherwise, return orders related to the user's customer profile
 
     def perform_create(self, serializer):
-        customer = CustomerProfile.objects.get(user=self.request.user)
-        serializer.save(customer=customer)  # Pass customer, items come from request datamer)
+        customer = CustomerProfile.objects.get(user=self.request.user)       # Get the customer profile of the currently authenticated user
+        serializer.save(customer=customer)  # Pass customer, items come from request datamer)   # Save the order, associating it with the customer
 
 
 # from django.shortcuts import render

@@ -9,5 +9,5 @@ router.register(r'login', LoginView, basename='login')
 router.register(r'notifications', NotificationView, basename='notifications')
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls))      # Include the router's URLs in the main URL patterns
 ]

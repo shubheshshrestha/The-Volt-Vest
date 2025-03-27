@@ -51,16 +51,16 @@ class DeliveryView(viewsets.ModelViewSet):
             return Delivery.objects.all()
         
         try:
-            delivery_personnel = DeliveryPersonnel.objects.get(user=self.request.user)
-            return Delivery.objects.filter(delivery_personnel=delivery_personnel)
+            delivery_personnel = DeliveryPersonnel.objects.get(user=self.request.user)       # Try to get the DeliveryPersonnel object associated with the current user
+            return Delivery.objects.filter(delivery_personnel=delivery_personnel)   # Return the Delivery objects associated with the DeliveryPersonnel
         except DeliveryPersonnel.DoesNotExist:
-            return Delivery.objects.none()
+            return Delivery.objects.none()  # Return an empty queryset
 
     def create(self, request, *args, **kwargs):
         if not request.user.has_perm('delivery.add_delivery'):
             return Response({"detail": "You do not have permission to add deliveries."},
                             status=status.HTTP_403_FORBIDDEN)
-        return super().create(request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)     # Otherwise, create a new Delivery object
 
     def update(self, request, *args, **kwargs):
         delivery_instance = self.get_object()  # Get the Delivery instance
@@ -70,10 +70,10 @@ class DeliveryView(viewsets.ModelViewSet):
         if not (self.request.user.is_staff or
                 (request.user.has_perm('delivery.change_delivery') and
                  delivery_instance.delivery_personnel.user == self.request.user and
-                 'status' in request.data)):
+                 'status' in request.data)):    # Check if the user has permission to update the delivery
             return Response({"detail": "You do not have permission to perform this action."},
                             status=status.HTTP_403_FORBIDDEN)
-        return super().update(request, *args, **kwargs)
+        return super().update(request, *args, **kwargs)     # Otherwise, update the Delivery object
 
     def destroy(self, request, *args, **kwargs):
         if not request.user.has_perm('delivery.delete_delivery'):
@@ -84,12 +84,12 @@ class DeliveryView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         try:
             #  Get delivery_personnel from request data if provided, otherwise, assign to the user.
-            delivery_personnel_id = self.request.data.get('delivery_personnel')
+            delivery_personnel_id = self.request.data.get('delivery_personnel') # Get the delivery_personnel ID from the request data
             if delivery_personnel_id:
-                delivery_personnel = DeliveryPersonnel.objects.get(pk=delivery_personnel_id)
+                delivery_personnel = DeliveryPersonnel.objects.get(pk=delivery_personnel_id)    # Get the DeliveryPersonnel object with the provided ID
             else:
-                delivery_personnel = DeliveryPersonnel.objects.get(user=self.request.user)
-            serializer.save(delivery_personnel=delivery_personnel)
+                delivery_personnel = DeliveryPersonnel.objects.get(user=self.request.user)  # Get the DeliveryPersonnel object associated with the current user
+            serializer.save(delivery_personnel=delivery_personnel)  # Save the Delivery object, associating it with the delivery personnel
         except DeliveryPersonnel.DoesNotExist:
             return Response({"error": "No delivery personnel found for this user"}, status=status.HTTP_400_BAD_REQUEST)
 

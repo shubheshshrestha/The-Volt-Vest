@@ -15,14 +15,14 @@ class InventoryLogView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
+        user = self.request.user    # Get the current user from the request
 
         if user.is_staff:  #  Admin
             return InventoryLog.objects.all()  #  Admins see all
         elif hasattr(user, 'supplier'):  #  Supplier
             #  Filter logs for the supplier's products
             return InventoryLog.objects.filter(
-                product__supplier=user.supplier
+                product__supplier=user.supplier      #  Filter logs based on the supplier of the product
             )
         else:
             return InventoryLog.objects.none()  #  Other users see none
@@ -61,24 +61,24 @@ class InventoryLogView(viewsets.ModelViewSet):
 
         #   Update product stock based on inventory action
         if action == 'increase':
-            product.stock += quantity
+            product.stock += quantity   #  Increase the product stock
         elif action == 'decrease':
-            if product.stock < quantity:
+            if product.stock < quantity:    #  Check if there is sufficient stock
                 return Response(
                     {"error": "Insufficient stock"},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            product.stock -= quantity
+            product.stock -= quantity   #  Decrease the product stock
         else:
             return Response(
                 {"error": "Invalid action"},
                 status=status.HTTP_400_BAD_REQUEST
             )  #  Handle invalid action
 
-        product.save()
+        product.save()  #  Save the updated product
 
         #   Save the inventory log and return response
-        self.perform_create(serializer)
+        self.perform_create(serializer)     #  Create the inventory log using perform_create
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers

@@ -41,4 +41,4 @@ class SupplierCreateView(viewsets.ViewSet):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except IntegrityError:
-            raise serializers.ValidationError({"error": "Already created with this id."})
+            raise serializers.ValidationError({"error": "Already created with this id."})   # Raise a validation error if a Supplier with the same ID already exists

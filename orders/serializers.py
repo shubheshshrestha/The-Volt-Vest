@@ -25,27 +25,28 @@ class OrderSerializer(serializers.ModelSerializer):
         customer_profile = self.context['request'].user.customerprofile
         
         # Calculate total_price from products and quantities
-        total_price = 0
-        for item_data in items_data:
-            product = Product.objects.get(id=item_data['product'])
-            total_price += product.price * item_data['quantity']
+        total_price = 0     # Initialize the total price
+        for item_data in items_data:    # Iterate through the items data
+            product = Product.objects.get(id=item_data['product'])  # Get the Product instance based on the product ID from the item data
+            total_price += product.price * item_data['quantity']    # Add the subtotal for each item to the total price
 
         # Create the order
-        order = Order.objects.create(
-            customer=customer_profile,
-            total_price=total_price
+        order = Order.objects.create(   # Create a new Order instance
+            customer=customer_profile,  # Assign the customer profile to the order
+            total_price=total_price     # Assign the calculated total price to the order
         )
         
         # Add products with quantities via OrderProduct
-        for item_data in items_data:
-            product = Product.objects.get(id=item_data['product'])
-            OrderProduct.objects.create(
-                order=order,
-                product=product,
-                quantity=item_data['quantity']
+        for item_data in items_data:    # Iterate through the items data
+            product = Product.objects.get(id=item_data['product'])  # Get the Product instance based on the product ID from the item data
+            OrderProduct.objects.create(    # Create a new OrderProduct instance
+                order=order,    # Assign the order to the OrderProduct
+                product=product,     # Assign the product to the OrderProduct
+                quantity=item_data['quantity']  # Assign the quantity to the OrderProduct
             )
         
-        return order
+        return order    # Return the created order
+    
 # class OrderItemSerializer(serializers.ModelSerializer):
 #     product_details = ProductSerializer(source='product', read_only=True)
 

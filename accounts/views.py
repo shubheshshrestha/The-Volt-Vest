@@ -13,7 +13,7 @@ from rest_framework.authentication import TokenAuthentication
 
 # Create your views here.
 
-User = get_user_model()
+User = get_user_model()     # Get the active User model
 
 class RegisterView(GenericViewSet):
     queryset = User.objects.all()
@@ -27,8 +27,8 @@ class RegisterView(GenericViewSet):
         serializer = UserSerializer(data=request.data)                                                                  
 
         if serializer.is_valid():
-            serializer.save() # calls the serializer's 'create' method
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            serializer.save() # calls the serializer's 'create' method  # Save the new user
+            return Response(serializer.data, status=status.HTTP_201_CREATED)    # Return the serialized data with a 201 Created status
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
@@ -57,7 +57,7 @@ class NotificationView(ModelViewSet):
 
     def get_queryset(self):
         # Only show notification for logged-in user
-        return Notification.objects.filter(user=self.request.user)
+        return Notification.objects.filter(user=self.request.user)  # Return notifications for the currently authenticated user
     
 # class AdminUserView(ModelViewSet):  # ReadOnlyModelViewSet if  only read access needed
 #     queryset = User.objects.filter(role='Admin')
