@@ -1,5 +1,8 @@
-# LandLink — Django E-Commerce Platform
-Django e-commerce platform with product listings, user authentication, search/filters, REST API, and automated inventory management with stock adjustment actions.
+# The Volt Vest — Django E-Commerce Platform
+
+The Volt Vest is an e-commerce platform built with Django to support my online retail concept.  
+It includes product listings, secure user authentication, search and filtering, REST API endpoints for integration, and automated inventory management with stock adjustment actions.  
+Designed for scalability, it demonstrates backend architecture, data modeling, and production-ready workflows.
 
 ## Features
 - User registration, login, and authentication
